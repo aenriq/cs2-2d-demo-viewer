@@ -1,0 +1,174 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #0f1115;
+  color: #e8eaed;
+}
+
+body {
+  margin: 0;
+}
+
+/* Dev preview styles only — not shipped with the library */
+
+.app {
+  min-height: 100vh;
+}
+
+.app__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #2a2f3a;
+}
+
+.app__header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.app__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.app__mode {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.app__file-btn {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #2b59ff;
+  font-size: 14px;
+}
+
+.app__hint,
+.app__error {
+  padding: 24px 16px;
+}
+
+.app__error {
+  color: #f88;
+}
+
+.app__player {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.app__radar-wrap {
+  max-width: 1024px;
+}
+
+.app__radar-canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  background: #0a1014;
+}
+
+.app__toolbar {
+  display: flex;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.app__toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.app__playback {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  max-width: 1024px;
+}
+
+.app__playback input[type="range"] {
+  flex: 1;
+}
+
+.app__round-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.app__rounds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.app__round-btn {
+  cursor: pointer;
+  border: 1px solid #3a4455;
+  border-radius: 6px;
+  padding: 6px 10px;
+  background: #1a2030;
+  color: inherit;
+}
+
+.app__round-btn.is-active {
+  background: #2b59ff;
+  border-color: #2b59ff;
+}
+
+.app__round-nav > button {
+  cursor: pointer;
+  border: 1px solid #3a4455;
+  border-radius: 6px;
+  padding: 6px 10px;
+  background: #1a2030;
+  color: inherit;
+}
+
+.app__round-nav > button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.app__meta {
+  margin: 0;
+  font-size: 13px;
+  color: #9aa3b2;
+}
+
+.app__events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 240px;
+  overflow: auto;
+  font-size: 13px;
+}
+
+.app__events li {
+  padding: 4px 0;
+  border-bottom: 1px solid #222831;
+  color: #9aa3b2;
+}
+
+.app__events li[data-active] {
+  color: #7eb6ff;
+}
+
+code {
+  font-size: 0.9em;
+}
