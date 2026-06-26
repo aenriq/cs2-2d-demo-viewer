@@ -1,0 +1,22 @@
+node_modules
+dist
+dev/dist
+
+# demo artifacts
+*.dem
+replay.json
+
+# env / secrets
+.env
+.env.*
+
+# logs & caches
+*.log
+.cache
+*.tsbuildinfo
+.eslintcache
+
+# OS / IDE
+.DS_Store
+.idea
+*.tgz
