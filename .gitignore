@@ -1,6 +1,8 @@
 node_modules
 dist
 dev/dist
+examples/*/node_modules
+examples/*/dist
 
 # demo artifacts
 *.dem

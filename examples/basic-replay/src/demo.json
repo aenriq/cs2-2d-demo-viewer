@@ -1,0 +1,126 @@
+{
+  "map": "de_dust2",
+  "tickRate": 64,
+  "totalTicks": 24,
+  "mapMeta": {
+    "radarUrl": "https://raw.githubusercontent.com/akiver/cs-demo-manager/master/src/ui/maps/assets/radar/dust2.png"
+  },
+  "frames": [
+    {
+      "tick": 0,
+      "players": [
+        {
+          "steamId": "ct-1",
+          "name": "Alpha",
+          "team": "CT",
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "radar": { "x": 0.35, "y": 0.72 },
+          "health": 100,
+          "alive": true,
+          "yaw": 45
+        },
+        {
+          "steamId": "t-1",
+          "name": "Bravo",
+          "team": "T",
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "radar": { "x": 0.68, "y": 0.28 },
+          "health": 100,
+          "alive": true,
+          "yaw": 225
+        }
+      ]
+    },
+    {
+      "tick": 8,
+      "players": [
+        {
+          "steamId": "ct-1",
+          "name": "Alpha",
+          "team": "CT",
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "radar": { "x": 0.4, "y": 0.65 },
+          "health": 100,
+          "alive": true,
+          "yaw": 30
+        },
+        {
+          "steamId": "t-1",
+          "name": "Bravo",
+          "team": "T",
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "radar": { "x": 0.62, "y": 0.32 },
+          "health": 100,
+          "alive": true,
+          "yaw": 210
+        }
+      ]
+    },
+    {
+      "tick": 16,
+      "players": [
+        {
+          "steamId": "ct-1",
+          "name": "Alpha",
+          "team": "CT",
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "radar": { "x": 0.48, "y": 0.55 },
+          "health": 78,
+          "alive": true,
+          "yaw": 10
+        },
+        {
+          "steamId": "t-1",
+          "name": "Bravo",
+          "team": "T",
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "radar": { "x": 0.55, "y": 0.38 },
+          "health": 100,
+          "alive": true,
+          "yaw": 190
+        }
+      ]
+    },
+    {
+      "tick": 24,
+      "players": [
+        {
+          "steamId": "ct-1",
+          "name": "Alpha",
+          "team": "CT",
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "radar": { "x": 0.52, "y": 0.48 },
+          "health": 78,
+          "alive": true,
+          "yaw": 0
+        },
+        {
+          "steamId": "t-1",
+          "name": "Bravo",
+          "team": "T",
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "radar": { "x": 0.52, "y": 0.48 },
+          "health": 0,
+          "alive": false,
+          "yaw": 180
+        }
+      ]
+    }
+  ]
+}
