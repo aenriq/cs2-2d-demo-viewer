@@ -19,6 +19,9 @@ export type { PlaybackControlsProps } from "./components/PlaybackControls.tsx";
 export { DemoEventList, formatDemoEvent } from "./components/DemoEventList.tsx";
 export type { DemoEventListProps } from "./components/DemoEventList.tsx";
 
+export { DemoKillfeed, formatKillfeedEntry } from "./components/DemoKillfeed.tsx";
+export type { DemoKillfeedProps } from "./components/DemoKillfeed.tsx";
+
 export { drawReplayFrame, getRoundAtTick } from "./canvas/draw-frame.ts";
 export type { DrawFrameOptions } from "./canvas/draw-frame.ts";
 
@@ -112,6 +115,21 @@ export type {
 
 export { useDemoReplay } from "./hooks/useDemoReplay.ts";
 export type { UseDemoReplayOptions, UseDemoReplayResult } from "./hooks/useDemoReplay.ts";
+
+export { useKillfeed } from "./hooks/useKillfeed.ts";
+export type { UseKillfeedOptions, UseKillfeedResult } from "./hooks/useKillfeed.ts";
+
+export {
+  getKillfeedDisplayDurationTicks,
+  getKillfeedEntries,
+  getKillfeedEntriesForDemo,
+  isKillEvent,
+} from "./utils/killfeed.ts";
+export type {
+  GetKillfeedEntriesOptions,
+  KillEvent,
+  KillfeedEntry,
+} from "./utils/killfeed.ts";
 
 export type {
   DemoEvent,

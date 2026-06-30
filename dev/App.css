@@ -150,6 +150,21 @@ body {
   color: #9aa3b2;
 }
 
+.app__killfeed {
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+  max-width: 320px;
+  font-size: 13px;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 6px;
+}
+
+.app__killfeed li {
+  padding: 4px 0;
+  color: #e8eaed;
+}
+
 .app__events {
   margin: 0;
   padding: 0;

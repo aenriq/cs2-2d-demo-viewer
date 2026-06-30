@@ -2,9 +2,11 @@ import { useState, type ChangeEvent } from "react";
 import {
   createDemoReplayPlayer,
   DemoEventList,
+  DemoKillfeed,
   DemoReplayPlayer,
   PlaybackControls,
   RoundSelector,
+  useKillfeed,
   type ReplayViewPreset,
 } from "../src/index.ts";
 import type { DemoReplayData } from "../src/types.ts";
@@ -76,7 +78,7 @@ export function App() {
           Load a parsed replay JSON file to preview the viewer.
         </p>
         ) : mode === "composed" ? (
-          <DemoReplayPlayer demo={demo} className="app__player" showEventLog />
+          <DemoReplayPlayer demo={demo} className="app__player" showKillfeed showEventLog />
         ) : (
           <ManualCompose demo={demo} />
         )}
@@ -88,6 +90,7 @@ export function App() {
 function ManualCompose({ demo }: { demo: DemoReplayData }) {
   const [viewPreset, setViewPreset] = useState<ReplayViewPreset>("full");
   const replay = replayPlayer.useDemo(demo, { viewPreset });
+  const killfeed = useKillfeed(demo, { currentTick: replay.currentTick });
 
   return (
     <div className="app__player">
@@ -209,6 +212,8 @@ function ManualCompose({ demo }: { demo: DemoReplayData }) {
       <p className="app__meta">
         tick {replay.currentTick ?? "—"} · round {replay.currentRound?.number ?? "—"}
       </p>
+
+      <DemoKillfeed className="app__killfeed" entries={killfeed.entries} />
 
       <DemoEventList
         className="app__events"
