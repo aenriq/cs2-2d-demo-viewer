@@ -1,6 +1,6 @@
 import type { Team } from "../types.ts";
 
-/** Leetify-style CT blue. */
+/** CT / T player fill colors for radar markers. */
 export function teamFill(team: Team | string): string {
   if (team === "CT") return "#5DA8F0";
   if (team === "T") return "#F0984A";

@@ -16,7 +16,7 @@ export interface StarburstOptions {
 const DEFAULT_RAY_COUNT = 18;
 
 /**
- * Leetify-style muzzle / impact starburst — bright core + sharp radiating rays.
+ * Muzzle / impact starburst — bright core with sharp radiating rays.
  */
 export function drawStarburst(
   ctx: CanvasRenderingContext2D,
