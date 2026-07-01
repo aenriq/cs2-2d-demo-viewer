@@ -7,6 +7,7 @@ Each folder is a small Vite app with its own README.
 | Example | What it teaches |
 |---------|-----------------|
 | [basic-replay](./basic-replay/) | Smallest useful setup — parsed JSON, radar canvas, play / scrub |
+| [full-replay](./full-replay/) | Everything — all hooks, layers, killfeed, economy, events, round nav |
 
 ## Running an example
 
@@ -19,4 +20,4 @@ npm install
 npm run dev
 ```
 
-Open the URL Vite prints (default `http://localhost:5173`).
+Open the URL Vite prints (`5174` for basic-replay, `5175` for full-replay).

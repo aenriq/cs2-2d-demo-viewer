@@ -1,0 +1,309 @@
+{
+  "map": "de_dust2",
+  "tickRate": 64,
+  "totalTicks": 127,
+  "mapMeta": {
+    "radarUrl": "https://raw.githubusercontent.com/akiver/cs-demo-manager/master/src/ui/maps/assets/radar/dust2.png"
+  },
+  "rounds": [
+    { "number": 1, "startTick": 0, "endTick": 63, "winner": "CT" },
+    { "number": 2, "startTick": 64, "endTick": 127, "winner": "T" }
+  ],
+  "events": [
+    { "tick": 0, "type": "round_start" },
+    { "tick": 40, "type": "kill", "attacker": "Alpha", "victim": "Bravo", "weapon": "ak47" },
+    { "tick": 63, "type": "round_end", "winner": "CT" },
+    { "tick": 64, "type": "round_start" },
+    { "tick": 100, "type": "bomb_planted" },
+    { "tick": 112, "type": "kill", "attacker": "Charlie", "victim": "Delta", "weapon": "m4a1_silencer" },
+    { "tick": 127, "type": "round_end", "winner": "T" }
+  ],
+  "shots": [
+    { "tick": 36, "team": "CT", "from": { "x": 0.38, "y": 0.68 }, "to": { "x": 0.65, "y": 0.32 } },
+    { "tick": 40, "team": "CT", "from": { "x": 0.42, "y": 0.58 }, "to": { "x": 0.58, "y": 0.4 } },
+    { "tick": 88, "team": "T", "from": { "x": 0.7, "y": 0.25 }, "to": { "x": 0.45, "y": 0.55 } },
+    { "tick": 110, "team": "CT", "from": { "x": 0.5, "y": 0.5 }, "to": { "x": 0.62, "y": 0.35 } }
+  ],
+  "utilities": [
+    {
+      "id": "smoke-a",
+      "type": "smoke",
+      "entityId": 101,
+      "startTick": 96,
+      "endTick": 220,
+      "radar": { "x": 0.55, "y": 0.42 },
+      "throwerName": "Bravo",
+      "throwerTeam": "T"
+    },
+    {
+      "id": "flash-a",
+      "type": "flash",
+      "entityId": 102,
+      "startTick": 104,
+      "endTick": 108,
+      "radar": { "x": 0.48, "y": 0.48 },
+      "throwerName": "Delta",
+      "throwerTeam": "T"
+    }
+  ],
+  "grenadePaths": [
+    {
+      "entityId": 101,
+      "type": "smoke",
+      "throwerName": "Bravo",
+      "throwerTeam": "T",
+      "endTick": 96,
+      "points": [
+        { "tick": 80, "radar": { "x": 0.68, "y": 0.28 } },
+        { "tick": 88, "radar": { "x": 0.62, "y": 0.35 } },
+        { "tick": 96, "radar": { "x": 0.55, "y": 0.42 } }
+      ]
+    }
+  ],
+  "economy": [
+    {
+      "roundNumber": 1,
+      "freezeEndTick": 16,
+      "players": [
+        {
+          "steamId": "ct-1",
+          "name": "Alpha",
+          "team": "CT",
+          "startMoney": 800,
+          "moneySpent": 700,
+          "endMoney": 100,
+          "equipmentValue": 1200,
+          "purchases": [
+            { "item": "kevlar", "cost": 650 },
+            { "item": "p250", "cost": 300 }
+          ],
+          "primary": "m4a1_silencer",
+          "secondary": "p250",
+          "armor": "kevlar",
+          "utilities": []
+        },
+        {
+          "steamId": "ct-2",
+          "name": "Charlie",
+          "team": "CT",
+          "startMoney": 800,
+          "moneySpent": 200,
+          "endMoney": 600,
+          "equipmentValue": 800,
+          "purchases": [{ "item": "p250", "cost": 300 }],
+          "secondary": "p250",
+          "armor": "none",
+          "utilities": ["flash"]
+        },
+        {
+          "steamId": "t-1",
+          "name": "Bravo",
+          "team": "T",
+          "startMoney": 800,
+          "moneySpent": 700,
+          "endMoney": 100,
+          "equipmentValue": 1100,
+          "purchases": [
+            { "item": "kevlar", "cost": 650 },
+            { "item": "glock", "cost": 0 }
+          ],
+          "secondary": "glock",
+          "armor": "kevlar",
+          "utilities": []
+        },
+        {
+          "steamId": "t-2",
+          "name": "Delta",
+          "team": "T",
+          "startMoney": 800,
+          "moneySpent": 0,
+          "endMoney": 800,
+          "equipmentValue": 200,
+          "purchases": [],
+          "secondary": "glock",
+          "armor": "none",
+          "utilities": []
+        }
+      ]
+    },
+    {
+      "roundNumber": 2,
+      "freezeEndTick": 80,
+      "players": [
+        {
+          "steamId": "ct-1",
+          "name": "Alpha",
+          "team": "CT",
+          "startMoney": 3250,
+          "moneySpent": 4900,
+          "endMoney": 450,
+          "equipmentValue": 6100,
+          "purchases": [
+            { "item": "ak47", "cost": 2700 },
+            { "item": "kevlar_helmet", "cost": 1000 },
+            { "item": "smokegrenade", "cost": 300 },
+            { "item": "flashbang", "cost": 200 }
+          ],
+          "primary": "ak47",
+          "secondary": "p250",
+          "armor": "kevlar_helmet",
+          "utilities": ["smoke", "flash"]
+        },
+        {
+          "steamId": "ct-2",
+          "name": "Charlie",
+          "team": "CT",
+          "startMoney": 2900,
+          "moneySpent": 4050,
+          "endMoney": 900,
+          "equipmentValue": 5200,
+          "purchases": [
+            { "item": "m4a1_silencer", "cost": 2900 },
+            { "item": "kevlar_helmet", "cost": 1000 },
+            { "item": "defuser", "cost": 400 }
+          ],
+          "primary": "m4a1_silencer",
+          "secondary": "p250",
+          "armor": "kevlar_helmet",
+          "utilities": []
+        },
+        {
+          "steamId": "t-1",
+          "name": "Bravo",
+          "team": "T",
+          "startMoney": 1800,
+          "moneySpent": 2100,
+          "endMoney": 300,
+          "equipmentValue": 2800,
+          "purchases": [
+            { "item": "galilar", "cost": 1800 },
+            { "item": "kevlar", "cost": 650 },
+            { "item": "smokegrenade", "cost": 300 }
+          ],
+          "primary": "galilar",
+          "secondary": "glock",
+          "armor": "kevlar",
+          "utilities": ["smoke"]
+        },
+        {
+          "steamId": "t-2",
+          "name": "Delta",
+          "team": "T",
+          "startMoney": 1600,
+          "moneySpent": 1600,
+          "endMoney": 0,
+          "equipmentValue": 2400,
+          "purchases": [
+            { "item": "galilar", "cost": 1800 },
+            { "item": "flashbang", "cost": 200 }
+          ],
+          "primary": "galilar",
+          "secondary": "glock",
+          "armor": "none",
+          "utilities": ["flash"]
+        }
+      ]
+    }
+  ],
+  "frames": [
+    {
+      "tick": 0,
+      "players": [
+        { "steamId": "ct-1", "name": "Alpha", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.32, "y": 0.75 }, "health": 100, "alive": true, "yaw": 45, "weapon": "m4a1_silencer" },
+        { "steamId": "ct-2", "name": "Charlie", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.28, "y": 0.7 }, "health": 100, "alive": true, "yaw": 60, "weapon": "usp_silencer" },
+        { "steamId": "t-1", "name": "Bravo", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.7, "y": 0.25 }, "health": 100, "alive": true, "yaw": 225, "weapon": "glock" },
+        { "steamId": "t-2", "name": "Delta", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.74, "y": 0.3 }, "health": 100, "alive": true, "yaw": 200, "weapon": "glock" }
+      ]
+    },
+    {
+      "tick": 16,
+      "players": [
+        { "steamId": "ct-1", "name": "Alpha", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.35, "y": 0.72 }, "health": 100, "alive": true, "yaw": 40, "weapon": "m4a1_silencer" },
+        { "steamId": "ct-2", "name": "Charlie", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.3, "y": 0.68 }, "health": 100, "alive": true, "yaw": 55, "weapon": "usp_silencer" },
+        { "steamId": "t-1", "name": "Bravo", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.68, "y": 0.28 }, "health": 100, "alive": true, "yaw": 220, "weapon": "glock" },
+        { "steamId": "t-2", "name": "Delta", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.72, "y": 0.32 }, "health": 100, "alive": true, "yaw": 195, "weapon": "glock" }
+      ]
+    },
+    {
+      "tick": 32,
+      "players": [
+        { "steamId": "ct-1", "name": "Alpha", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.38, "y": 0.68 }, "health": 100, "alive": true, "yaw": 35, "weapon": "m4a1_silencer" },
+        { "steamId": "ct-2", "name": "Charlie", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.34, "y": 0.64 }, "health": 100, "alive": true, "yaw": 50, "weapon": "usp_silencer" },
+        { "steamId": "t-1", "name": "Bravo", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.65, "y": 0.32 }, "health": 100, "alive": true, "yaw": 215, "weapon": "glock" },
+        { "steamId": "t-2", "name": "Delta", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.7, "y": 0.35 }, "health": 100, "alive": true, "yaw": 190, "weapon": "glock" }
+      ]
+    },
+    {
+      "tick": 40,
+      "players": [
+        { "steamId": "ct-1", "name": "Alpha", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.42, "y": 0.58 }, "health": 100, "alive": true, "yaw": 10, "weapon": "ak47" },
+        { "steamId": "ct-2", "name": "Charlie", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.36, "y": 0.6 }, "health": 100, "alive": true, "yaw": 25, "weapon": "usp_silencer" },
+        { "steamId": "t-1", "name": "Bravo", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.58, "y": 0.4 }, "health": 0, "alive": false, "yaw": 180, "weapon": "glock" },
+        { "steamId": "t-2", "name": "Delta", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.62, "y": 0.38 }, "health": 100, "alive": true, "yaw": 200, "weapon": "glock" }
+      ]
+    },
+    {
+      "tick": 56,
+      "players": [
+        { "steamId": "ct-1", "name": "Alpha", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.45, "y": 0.55 }, "health": 100, "alive": true, "yaw": 0, "weapon": "ak47" },
+        { "steamId": "ct-2", "name": "Charlie", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.4, "y": 0.58 }, "health": 100, "alive": true, "yaw": 15, "weapon": "usp_silencer" },
+        { "steamId": "t-1", "name": "Bravo", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.58, "y": 0.4 }, "health": 0, "alive": false, "yaw": 180, "weapon": "glock" },
+        { "steamId": "t-2", "name": "Delta", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.75, "y": 0.28 }, "health": 45, "alive": true, "yaw": 210, "weapon": "glock" }
+      ]
+    },
+    {
+      "tick": 64,
+      "players": [
+        { "steamId": "ct-1", "name": "Alpha", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.3, "y": 0.72 }, "health": 100, "alive": true, "yaw": 45, "weapon": "ak47" },
+        { "steamId": "ct-2", "name": "Charlie", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.26, "y": 0.68 }, "health": 100, "alive": true, "yaw": 60, "weapon": "m4a1_silencer" },
+        { "steamId": "t-1", "name": "Bravo", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.72, "y": 0.22 }, "health": 100, "alive": true, "yaw": 225, "weapon": "galilar" },
+        { "steamId": "t-2", "name": "Delta", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.76, "y": 0.26 }, "health": 100, "alive": true, "yaw": 200, "weapon": "galilar" }
+      ]
+    },
+    {
+      "tick": 80,
+      "players": [
+        { "steamId": "ct-1", "name": "Alpha", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.38, "y": 0.65 }, "health": 100, "alive": true, "yaw": 30, "weapon": "ak47" },
+        { "steamId": "ct-2", "name": "Charlie", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.34, "y": 0.62 }, "health": 100, "alive": true, "yaw": 45, "weapon": "m4a1_silencer" },
+        { "steamId": "t-1", "name": "Bravo", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.68, "y": 0.28 }, "health": 100, "alive": true, "yaw": 220, "weapon": "galilar" },
+        { "steamId": "t-2", "name": "Delta", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.72, "y": 0.32 }, "health": 100, "alive": true, "yaw": 195, "weapon": "galilar" }
+      ]
+    },
+    {
+      "tick": 96,
+      "players": [
+        { "steamId": "ct-1", "name": "Alpha", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.45, "y": 0.55 }, "health": 100, "alive": true, "yaw": 20, "weapon": "ak47" },
+        { "steamId": "ct-2", "name": "Charlie", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.42, "y": 0.52 }, "health": 100, "alive": true, "yaw": 35, "weapon": "m4a1_silencer" },
+        { "steamId": "t-1", "name": "Bravo", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.58, "y": 0.38 }, "health": 88, "alive": true, "yaw": 210, "weapon": "galilar" },
+        { "steamId": "t-2", "name": "Delta", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.62, "y": 0.35 }, "health": 100, "alive": true, "yaw": 190, "weapon": "galilar" }
+      ]
+    },
+    {
+      "tick": 104,
+      "players": [
+        { "steamId": "ct-1", "name": "Alpha", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.48, "y": 0.5 }, "health": 100, "alive": true, "yaw": 15, "weapon": "ak47" },
+        { "steamId": "ct-2", "name": "Charlie", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.46, "y": 0.48 }, "health": 100, "alive": true, "yaw": 30, "weapon": "m4a1_silencer", "flashDuration": 2.4, "flashAlpha": 200 },
+        { "steamId": "t-1", "name": "Bravo", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.55, "y": 0.4 }, "health": 88, "alive": true, "yaw": 205, "weapon": "galilar" },
+        { "steamId": "t-2", "name": "Delta", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.58, "y": 0.37 }, "health": 100, "alive": true, "yaw": 185, "weapon": "galilar" }
+      ]
+    },
+    {
+      "tick": 112,
+      "players": [
+        { "steamId": "ct-1", "name": "Alpha", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.5, "y": 0.48 }, "health": 100, "alive": true, "yaw": 5, "weapon": "ak47" },
+        { "steamId": "ct-2", "name": "Charlie", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.5, "y": 0.5 }, "health": 100, "alive": true, "yaw": 0, "weapon": "m4a1_silencer" },
+        { "steamId": "t-1", "name": "Bravo", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.52, "y": 0.42 }, "health": 60, "alive": true, "yaw": 200, "weapon": "galilar" },
+        { "steamId": "t-2", "name": "Delta", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.52, "y": 0.42 }, "health": 0, "alive": false, "yaw": 180, "weapon": "galilar" }
+      ]
+    },
+    {
+      "tick": 120,
+      "players": [
+        { "steamId": "ct-1", "name": "Alpha", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.52, "y": 0.45 }, "health": 72, "alive": true, "yaw": 350, "weapon": "ak47" },
+        { "steamId": "ct-2", "name": "Charlie", "team": "CT", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.5, "y": 0.48 }, "health": 100, "alive": true, "yaw": 10, "weapon": "m4a1_silencer" },
+        { "steamId": "t-1", "name": "Bravo", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.54, "y": 0.44 }, "health": 60, "alive": true, "yaw": 195, "weapon": "galilar" },
+        { "steamId": "t-2", "name": "Delta", "team": "T", "x": 0, "y": 0, "z": 0, "radar": { "x": 0.52, "y": 0.42 }, "health": 0, "alive": false, "yaw": 180, "weapon": "galilar" }
+      ]
+    }
+  ]
+}
