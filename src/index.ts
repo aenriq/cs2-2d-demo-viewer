@@ -119,6 +119,24 @@ export type { UseDemoReplayOptions, UseDemoReplayResult } from "./hooks/useDemoR
 export { useKillfeed } from "./hooks/useKillfeed.ts";
 export type { UseKillfeedOptions, UseKillfeedResult } from "./hooks/useKillfeed.ts";
 
+export { useEconomy } from "./hooks/useEconomy.ts";
+export type { UseEconomyOptions, UseEconomyResult } from "./hooks/useEconomy.ts";
+
+export {
+  classifyBuyType,
+  computeTeamTotals,
+  getEconomyForFrameIndex,
+  getEconomyForTick,
+  getRoundEconomy,
+  hasEconomyInDemo,
+  sortEconomyPlayers,
+} from "./utils/economy.ts";
+export type {
+  BuyType,
+  EconomySortBy,
+  EconomyTeamTotals,
+} from "./utils/economy.ts";
+
 export {
   getKillfeedDisplayDurationTicks,
   getKillfeedEntries,
@@ -135,8 +153,11 @@ export type {
   DemoEvent,
   DemoFrame,
   DemoMapMeta,
+  DemoPlayerEconomy,
+  DemoPurchase,
   DemoReplayData,
   DemoRound,
+  DemoRoundEconomy,
   DemoShot,
   DemoUtilityEffect,
   DemoGrenadePath,

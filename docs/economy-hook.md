@@ -1,7 +1,7 @@
 # Economy hook — design & implementation plan
 
 Branch: `economy`  
-Status: **planning** (no hook shipped yet)
+Status: **shipped** (types, utils, `useEconomy` hook)
 
 ## Goal
 

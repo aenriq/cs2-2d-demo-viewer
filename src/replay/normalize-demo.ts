@@ -24,6 +24,7 @@ export function normalizeDemoReplay(input: DemoReplayInput): DemoReplayData {
     shots: input.shots ?? [],
     utilities: input.utilities ?? [],
     grenadePaths: input.grenadePaths ?? [],
+    economy: input.economy ?? [],
     mapMeta: input.mapMeta ?? null,
   };
 }

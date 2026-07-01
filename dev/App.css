@@ -69,14 +69,20 @@ body {
 
 .app__radar-wrap {
   max-width: 1024px;
+  padding: 3px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #1a2438 0%, #0d1219 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 12px 40px rgba(0, 0, 0, 0.45);
 }
 
 .app__radar-canvas {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 8px;
-  background: #0a1014;
+  border-radius: 7px;
+  background: #060a10;
 }
 
 .app__toolbar {
