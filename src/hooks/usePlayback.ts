@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FRAME_TICK_INTERVAL } from "../canvas/constants.ts";
 import type { DemoFrame } from "../types.ts";
 import type { DemoReplayLike } from "../replay/normalize-demo.ts";
+import { findFrameIndexForTick } from "../utils/rounds.ts";
 
 export interface UsePlaybackOptions {
   initialFrameIndex?: number;
@@ -11,6 +11,8 @@ export interface UsePlaybackOptions {
 
 export interface UsePlaybackResult {
   frameIndex: number;
+  /** Continuous tick — lerped while playing, snapped when scrubbing. */
+  playbackTick: number;
   playing: boolean;
   setFrameIndex: (index: number) => void;
   play: () => void;
@@ -26,11 +28,15 @@ export function usePlayback(
 ): UsePlaybackResult {
   const isControlled = options.frameIndex !== undefined;
   const [internalIndex, setInternalIndex] = useState(options.initialFrameIndex ?? 0);
+  const [playbackTick, setPlaybackTick] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const playStartRef = useRef({ wall: 0, tick: 0 });
 
   const frameIndex = isControlled ? options.frameIndex! : internalIndex;
   const maxIndex = Math.max(0, (demo?.frames.length ?? 1) - 1);
+  const tickRate = demo?.tickRate ?? 64;
+  const endTick = demo?.frames[maxIndex]?.tick ?? 0;
 
   const clampIndex = useCallback(
     (index: number) => Math.max(0, Math.min(index, maxIndex)),
@@ -39,23 +45,39 @@ export function usePlayback(
 
   const onFrameIndexChange = options.onFrameIndexChange;
 
+  const syncTickToIndex = useCallback(
+    (index: number) => {
+      const tick = demo?.frames[index]?.tick ?? 0;
+      setPlaybackTick(tick);
+      return tick;
+    },
+    [demo],
+  );
+
   const setFrameIndex = useCallback(
     (index: number) => {
+      setPlaying(false);
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+
       const next = clampIndex(index);
+      syncTickToIndex(next);
       if (!isControlled) setInternalIndex(next);
       const frame = demo?.frames[next];
       if (frame && onFrameIndexChange) {
         onFrameIndexChange(next, frame);
       }
     },
-    [clampIndex, demo, isControlled, onFrameIndexChange],
+    [clampIndex, demo, isControlled, onFrameIndexChange, syncTickToIndex],
   );
 
   const pause = useCallback(() => {
     setPlaying(false);
-    if (timerRef.current !== null) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
     }
   }, []);
 
@@ -70,8 +92,12 @@ export function usePlayback(
   const play = useCallback(() => {
     if (!demo || demo.frames.length === 0) return;
     if (frameIndex >= maxIndex) setFrameIndex(0);
+    playStartRef.current = {
+      wall: performance.now(),
+      tick: demo.frames[clampIndex(frameIndex)]?.tick ?? 0,
+    };
     setPlaying(true);
-  }, [demo, frameIndex, maxIndex, setFrameIndex]);
+  }, [clampIndex, demo, frameIndex, maxIndex, setFrameIndex]);
 
   const togglePlay = useCallback(() => {
     if (playing) pause();
@@ -81,31 +107,44 @@ export function usePlayback(
   useEffect(() => {
     if (!playing || !demo) return;
 
-    if (frameIndex >= maxIndex) {
-      pause();
-      return;
-    }
+    const animate = (now: number) => {
+      const elapsedSec = (now - playStartRef.current.wall) / 1000;
+      const nextTick = playStartRef.current.tick + elapsedSec * tickRate;
 
-    const msPerFrame = 1000 / ((demo.tickRate ?? 64) / FRAME_TICK_INTERVAL);
-    timerRef.current = setTimeout(() => {
-      setFrameIndex(frameIndex + 1);
-    }, msPerFrame);
+      if (nextTick >= endTick) {
+        setPlaybackTick(endTick);
+        if (!isControlled) setInternalIndex(maxIndex);
+        pause();
+        return;
+      }
+
+      setPlaybackTick(nextTick);
+      const nextIndex = findFrameIndexForTick(demo, nextTick);
+      if (!isControlled) setInternalIndex(nextIndex);
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
 
     return () => {
-      if (timerRef.current !== null) {
-        clearTimeout(timerRef.current);
-        timerRef.current = null;
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
       }
     };
-  }, [demo, frameIndex, maxIndex, pause, playing, setFrameIndex]);
+  }, [demo, endTick, isControlled, maxIndex, pause, playing, tickRate]);
 
   useEffect(() => {
     pause();
-    if (!isControlled) setInternalIndex(clampIndex(options.initialFrameIndex ?? 0));
-  }, [demo, pause, isControlled, clampIndex, options.initialFrameIndex]);
+    const index = clampIndex(options.initialFrameIndex ?? 0);
+    if (!isControlled) setInternalIndex(index);
+    syncTickToIndex(index);
+  }, [demo, pause, isControlled, clampIndex, options.initialFrameIndex, syncTickToIndex]);
 
   return {
     frameIndex,
+    playbackTick,
     playing,
     setFrameIndex,
     play,

@@ -68,6 +68,17 @@ export interface DemoEvent {
   victim?: string;
   weapon?: string;
   winner?: Team;
+  /** Set on `round_start` when parsed with `is_warmup_period`. */
+  isWarmup?: boolean;
+  /** Kill modifiers — populated when `type === "kill"`. */
+  headshot?: boolean;
+  noscope?: boolean;
+  thrusmoke?: boolean;
+  attackerblind?: boolean;
+  attackerinair?: boolean;
+  assistedflash?: boolean;
+  penetrated?: number;
+  revenge?: boolean;
 }
 
 export interface DemoShot {
@@ -78,16 +89,22 @@ export interface DemoShot {
 }
 
 export interface DemoRound {
+  /** Competitive round number — only set for `kind: "live"`. */
   number: number;
   startTick: number;
   endTick: number;
   winner?: Team;
+  kind?: RoundKind;
 }
+
+export type RoundKind = "warmup" | "knife" | "live";
 
 /** Parsed demo JSON schema consumed by the viewer. */
 export interface ParsedDemo {
   map: string;
   tickRate: number;
+  /** Tick gap between frames — set by parser (`--interval 4` or `8`). Inferred when omitted. */
+  frameTickInterval?: number;
   totalTicks: number;
   rounds: DemoRound[];
   frames: DemoFrame[];

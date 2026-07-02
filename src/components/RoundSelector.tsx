@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { DemoReplayInput } from "../replay/normalize-demo.ts";
 import type { DemoRound } from "../types.ts";
+import { getPlayableRounds } from "../utils/rounds.ts";
 
 export interface RoundSelectorProps {
   demo: DemoReplayInput;
@@ -23,9 +24,11 @@ export function RoundSelector({
   className,
   renderRoundButton,
 }: RoundSelectorProps) {
+  const rounds = getPlayableRounds(demo);
+
   return (
     <div className={className}>
-      {(demo.rounds ?? []).map((round) => {
+      {rounds.map((round) => {
         const active = round.number === currentRoundNumber;
         const onSelect = () => onRoundSelect(round);
 

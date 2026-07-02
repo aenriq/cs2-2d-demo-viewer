@@ -22,21 +22,54 @@ export type { DemoEventListProps } from "./components/DemoEventList.tsx";
 export { DemoKillfeed, formatKillfeedEntry } from "./components/DemoKillfeed.tsx";
 export type { DemoKillfeedProps } from "./components/DemoKillfeed.tsx";
 
-export { drawReplayFrame, getRoundAtTick } from "./canvas/draw-frame.ts";
+export { DEFAULT_DRAW_OPTIONS } from "./canvas/draw-frame.ts";
 export type { DrawFrameOptions } from "./canvas/draw-frame.ts";
+
+export {
+  getInterpolatedFrame,
+  interpolateFrames,
+} from "./utils/interpolate-frame.ts";
+
+export { lerp, lerpAngle, clamp01 } from "./utils/lerp.ts";
+
+export {
+  OFFICIAL_RADAR_CDN_BASE,
+  buildDemoMapMeta,
+  getOfficialRadarUrl,
+  resolveDemoMapMeta,
+} from "./utils/radar-url.ts";
+export type { RadarLevel } from "./utils/radar-url.ts";
+
+export {
+  buildDemoRoundsFromEvents,
+  demoHasKnifeRound,
+  getPlayableRounds,
+  normalizeDemoRounds,
+} from "./utils/demo-rounds.ts";
 
 export {
   findFrameIndexForRound,
   findFrameIndexForTick,
+  getLiveRoundAtTick,
+  getLiveRoundForFrameIndex,
+  getRoundAtTick,
   getRoundForFrameIndex,
   getRoundIndex,
+  isKnifeWeapon,
 } from "./utils/rounds.ts";
+
+export {
+  DEFAULT_FRAME_TICK_INTERVAL,
+  FRAME_TICK_INTERVAL,
+  SUPPORTED_FRAME_TICK_INTERVALS,
+  getFrameTickInterval,
+  inferFrameTickInterval,
+} from "./utils/frame-interval.ts";
 
 export {
   BEAK_LENGTH,
   BEAK_WIDTH,
   DEFAULT_CANVAS_SIZE,
-  FRAME_TICK_INTERVAL,
   PLAYER_RADIUS,
   SHOT_LIFETIME_TICKS,
 } from "./canvas/constants.ts";
@@ -70,8 +103,8 @@ export {
   playersLayer,
   shotsLayer,
   utilitiesLayer,
-} from "./canvas/layers/index.ts";
-export type { CreateReplayLayersOptions } from "./canvas/layers/index.ts";
+} from "./canvas/layers/index.tsx";
+export type { CreateReplayLayersOptions } from "./canvas/layers/index.tsx";
 
 export {
   normalizeDemoReplay,
@@ -88,6 +121,9 @@ export type {
   ReplayLayerPreset,
   ReplayViewPreset,
 } from "./replay/view-presets.ts";
+
+export { ReplayScene } from "./scene/ReplayScene.tsx";
+export { PlayerMarker } from "./scene/PlayerMarker.tsx";
 
 export type { ReplayLayer, ReplayLayerContext, ReplayLayerId } from "./replay/layer-types.ts";
 
@@ -131,12 +167,35 @@ export type {
   KillfeedEntry,
 } from "./utils/killfeed.ts";
 
+export {
+  DEFAULT_KILLFEED_ICON_BASE,
+  getKillModifiers,
+  getModifierIconUrl,
+  getWeaponIconUrl,
+  KILLFEED_EQUIPMENT_ICONS,
+  KILLFEED_MODIFIER_ICONS,
+  KILLFEED_MODIFIER_LABELS,
+  resolveWeaponIconId,
+} from "./killfeed/icon-registry.ts";
+export type { KillfeedModifierId } from "./killfeed/icon-registry.ts";
+
+export {
+  KillfeedIconRow,
+  KillfeedModifierIcon,
+  KillfeedWeaponIcon,
+} from "./killfeed/KillfeedIcons.tsx";
+export type {
+  KillfeedIconProps,
+  KillfeedIconRowProps,
+} from "./killfeed/KillfeedIcons.tsx";
+
 export type {
   DemoEvent,
   DemoFrame,
   DemoMapMeta,
   DemoReplayData,
   DemoRound,
+  RoundKind,
   DemoShot,
   DemoUtilityEffect,
   DemoGrenadePath,

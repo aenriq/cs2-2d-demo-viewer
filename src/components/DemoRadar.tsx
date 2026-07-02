@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useRef, type CSSProperties, type ReactNode } from "react";
+import { useMemo, type CSSProperties, type ReactNode } from "react";
+import { Application } from "@pixi/react";
 import { DEFAULT_CANVAS_SIZE } from "../canvas/constants.ts";
 import {
   createReplayLayers,
   type CreateReplayLayersOptions,
-} from "../canvas/layers/index.ts";
+} from "../canvas/layers/index.tsx";
 import {
   DEFAULT_DRAW_OPTIONS,
-  drawReplayFrame,
   type DrawFrameOptions,
 } from "../canvas/draw-frame.ts";
 import { useOptionalDemoReplayPlayer } from "../context/DemoReplayPlayerContext.tsx";
@@ -18,13 +18,19 @@ import {
 import type { DemoReplayPlayerConfig } from "../replay/player-config.ts";
 import type { ReplayLayer } from "../replay/layer-types.ts";
 import type { ReplayLayerPreset } from "../replay/view-presets.ts";
-import type { DemoReplayData } from "../types.ts";
+import { ReplayScene } from "../scene/ReplayScene.tsx";
+import { getInterpolatedFrame } from "../utils/interpolate-frame.ts";
+import type { DemoReplayData, PlayerFrame } from "../types.ts";
+import "../scene/pixi-setup.ts";
 
 export interface DemoRadarProps {
   demo: DemoReplayInput | DemoReplayData;
   frameIndex: number;
+  /** Continuous tick for lerp + effects timing. Falls back to frame tick when omitted. */
+  playbackTick?: number;
+  /** When true, player positions are interpolated between frames. */
+  playing?: boolean;
   drawOptions?: DrawFrameOptions;
-  /** Init config from `createDemoReplayPlayer()` — auto from provider when omitted. */
   playerConfig?: DemoReplayPlayerConfig;
   layerPreset?: ReplayLayerPreset;
   layers?: ReplayLayer[];
@@ -32,9 +38,14 @@ export interface DemoRadarProps {
   normalize?: boolean;
   size?: number;
   className?: string;
+  stageClassName?: string;
+  /** @deprecated use stageClassName */
   canvasClassName?: string;
   canvasStyle?: CSSProperties;
   radarImage?: HTMLImageElement | null;
+  selectedSteamId?: string | null;
+  onPlayerClick?: (player: PlayerFrame) => void;
+  onPlayerHover?: (player: PlayerFrame | null) => void;
   renderLoading?: () => ReactNode;
   renderError?: (error: Error) => ReactNode;
 }
@@ -42,6 +53,8 @@ export interface DemoRadarProps {
 export function DemoRadar({
   demo: demoInput,
   frameIndex,
+  playbackTick,
+  playing = false,
   drawOptions,
   playerConfig: playerConfigProp,
   layerPreset = "full",
@@ -50,18 +63,22 @@ export function DemoRadar({
   normalize: normalizeProp,
   size: sizeProp,
   className,
+  stageClassName,
   canvasClassName,
   canvasStyle,
   radarImage: radarImageProp,
+  selectedSteamId,
+  onPlayerClick,
+  onPlayerHover,
   renderLoading,
   renderError,
 }: DemoRadarProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const contextConfig = useOptionalDemoReplayPlayer();
   const playerConfig = playerConfigProp ?? contextConfig;
 
   const normalize = normalizeProp ?? playerConfig?.normalize ?? true;
   const size = sizeProp ?? playerConfig?.canvasSize ?? DEFAULT_CANVAS_SIZE;
+  const canvasClass = stageClassName ?? canvasClassName;
 
   const demo = useMemo(
     () => (normalize ? normalizeDemoReplay(demoInput) : (demoInput as DemoReplayData)),
@@ -94,33 +111,58 @@ export function DemoRadar({
   );
   const radarImage = radarImageProp ?? loadedImage;
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || !radarImage) return;
+  const resolvedTick =
+    playbackTick ?? demo.frames[frameIndex]?.tick ?? demo.frames[0]?.tick ?? 0;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+  const displayFrame = useMemo(() => {
+    if (playing) return getInterpolatedFrame(demo, resolvedTick);
+    return demo.frames[frameIndex] ?? { tick: resolvedTick, players: [] };
+  }, [demo, frameIndex, playing, resolvedTick]);
 
-    drawReplayFrame(
-      ctx,
+  const sceneContext = useMemo(
+    () =>
+      radarImage
+        ? {
+            demo,
+            frame: displayFrame,
+            playbackTick: resolvedTick,
+            radarImg: radarImage,
+            size,
+            options: resolvedDrawOptions,
+            selectedSteamId,
+            onPlayerClick,
+            onPlayerHover,
+          }
+        : null,
+    [
       demo,
-      frameIndex,
+      displayFrame,
+      resolvedTick,
       radarImage,
       size,
       resolvedDrawOptions,
-      layers,
-    );
-  }, [demo, frameIndex, radarImage, size, resolvedDrawOptions, layers]);
+      selectedSteamId,
+      onPlayerClick,
+      onPlayerHover,
+    ],
+  );
 
   return (
-    <div className={className}>
-      <canvas
-        ref={canvasRef}
-        className={canvasClassName}
-        width={size}
-        height={size}
-        style={canvasStyle}
-      />
+    <div className={className} style={canvasStyle}>
+      {radarImage && sceneContext && (
+        <div className={canvasClass}>
+          <Application
+            width={size}
+            height={size}
+            backgroundAlpha={0}
+            antialias
+            autoDensity
+            resolution={typeof window !== "undefined" ? window.devicePixelRatio : 1}
+          >
+            <ReplayScene layers={layers} context={sceneContext} />
+          </Application>
+        </div>
+      )}
       {!radarImage && loading && renderLoading?.()}
       {error && renderError?.(error)}
     </div>

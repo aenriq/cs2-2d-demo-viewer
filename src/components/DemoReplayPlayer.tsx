@@ -62,9 +62,13 @@ export function DemoReplayPlayer({
       <DemoRadar
         demo={demo}
         frameIndex={replay.frameIndex}
+        playbackTick={replay.playbackTick}
+        playing={replay.playing}
         drawOptions={replay.drawOptions}
         layerPreset={replay.layerPreset}
         layerOptions={replay.layerOptions}
+        selectedSteamId={replay.selectedSteamId}
+        onPlayerClick={replay.selectPlayer}
       />
 
       {showPlaybackControls && (

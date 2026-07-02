@@ -10,6 +10,9 @@ replay.json
 .env
 .env.*
 
+# temp
+temp/
+
 # logs & caches
 *.log
 .cache

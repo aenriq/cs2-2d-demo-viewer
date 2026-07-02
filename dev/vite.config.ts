@@ -5,6 +5,7 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
   root: path.resolve(__dirname),
+  publicDir: path.resolve(__dirname, "../assets"),
   resolve: {
     alias: {
       "cs2-demo-viewer": path.resolve(__dirname, "../src"),

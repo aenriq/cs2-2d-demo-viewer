@@ -1,4 +1,6 @@
 import type { DemoReplayData } from "../types.ts";
+import { resolveDemoMapMeta } from "../utils/radar-url.ts";
+import { normalizeDemoRounds } from "../utils/demo-rounds.ts";
 
 /** Minimal JSON — only map + frames required. */
 export type DemoReplayInput = Partial<DemoReplayData> &
@@ -17,14 +19,15 @@ export function normalizeDemoReplay(input: DemoReplayInput): DemoReplayData {
   return {
     map: input.map,
     tickRate: input.tickRate ?? 64,
+    frameTickInterval: input.frameTickInterval,
     totalTicks: input.totalTicks ?? lastFrame?.tick ?? 0,
-    rounds: input.rounds ?? [],
+    rounds: normalizeDemoRounds(input),
     frames: input.frames,
     events: input.events ?? [],
     shots: input.shots ?? [],
     utilities: input.utilities ?? [],
     grenadePaths: input.grenadePaths ?? [],
-    mapMeta: input.mapMeta ?? null,
+    mapMeta: resolveDemoMapMeta(input.map, input.mapMeta),
   };
 }
 

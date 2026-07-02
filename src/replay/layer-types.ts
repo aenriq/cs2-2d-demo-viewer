@@ -1,24 +1,24 @@
+import type { ReactNode } from "react";
 import type { DrawFrameOptions } from "../canvas/draw-frame.ts";
-import type { DemoFrame, DemoReplayData } from "../types.ts";
+import type { DemoFrame, DemoReplayData, PlayerFrame } from "../types.ts";
 
 export interface ReplayLayerContext {
-  ctx: CanvasRenderingContext2D;
   demo: DemoReplayData;
-  frameIndex: number;
   frame: DemoFrame;
+  playbackTick: number;
   radarImg: CanvasImageSource;
   size: number;
   options: DrawFrameOptions;
+  onPlayerClick?: (player: PlayerFrame) => void;
+  onPlayerHover?: (player: PlayerFrame | null) => void;
+  selectedSteamId?: string | null;
 }
 
 export interface ReplayLayer {
-  /** Unique layer id — use for include/exclude filters. */
   id: string;
-  /** Lower order draws first (underneath). */
   order: number;
-  /** Return false to skip when demo JSON lacks this data. */
   isAvailable?: (demo: DemoReplayData) => boolean;
-  draw: (context: ReplayLayerContext) => void;
+  render: (context: ReplayLayerContext) => ReactNode;
 }
 
 export type ReplayLayerId =

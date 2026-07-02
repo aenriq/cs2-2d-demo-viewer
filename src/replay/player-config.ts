@@ -2,7 +2,7 @@ import type { DrawFrameOptions } from "../canvas/draw-frame.ts";
 import {
   createReplayLayers,
   type CreateReplayLayersOptions,
-} from "../canvas/layers/index.ts";
+} from "../canvas/layers/index.tsx";
 import type { ReplayLayer } from "./layer-types.ts";
 import type { ReplayLayerId } from "./layer-types.ts";
 import type { ReplayLayerPreset, ReplayViewPreset } from "./view-presets.ts";

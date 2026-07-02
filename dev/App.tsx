@@ -7,6 +7,7 @@ import {
   PlaybackControls,
   RoundSelector,
   useKillfeed,
+  KillfeedIconRow,
   type ReplayViewPreset,
 } from "../src/index.ts";
 import type { DemoReplayData } from "../src/types.ts";
@@ -161,9 +162,13 @@ function ManualCompose({ demo }: { demo: DemoReplayData }) {
       <replayPlayer.Radar
         demo={demo}
         frameIndex={replay.frameIndex}
+        playbackTick={replay.playbackTick}
+        playing={replay.playing}
         drawOptions={replay.drawOptions}
+        selectedSteamId={replay.selectedSteamId}
+        onPlayerClick={replay.selectPlayer}
         className="app__radar-wrap"
-        canvasClassName="app__radar-canvas"
+        stageClassName="app__radar-canvas"
       />
 
       <PlaybackControls
@@ -210,10 +215,25 @@ function ManualCompose({ demo }: { demo: DemoReplayData }) {
       </div>
 
       <p className="app__meta">
-        tick {replay.currentTick ?? "—"} · round {replay.currentRound?.number ?? "—"}
+        tick {replay.currentTick ?? "—"} · round{" "}
+        {replay.currentRound?.number ??
+          replay.currentPhaseRound?.kind ??
+          "—"}
+        {replay.selectedSteamId ? ` · selected ${replay.selectedSteamId}` : ""}
       </p>
 
-      <DemoKillfeed className="app__killfeed" entries={killfeed.entries} />
+      <DemoKillfeed
+        className="app__killfeed"
+        entries={killfeed.entries}
+        renderEntry={(entry) => (
+          <span className="app__killfeed-row">
+            <span className="app__killfeed-names">
+              {entry.event.attacker ?? "?"} · {entry.event.victim ?? "?"}
+            </span>
+            <KillfeedIconRow event={entry.event} className="app__killfeed-icons" />
+          </span>
+        )}
+      />
 
       <DemoEventList
         className="app__events"

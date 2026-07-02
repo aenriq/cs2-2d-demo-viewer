@@ -1,0 +1,17 @@
+{
+  "name": "cs2-demo-parser-scripts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "parse": "bun run parse-demo.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@laihoe/demoparser2": "^0.41.3"
+  }
+}

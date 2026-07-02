@@ -1,18 +1,18 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useOptionalDemoReplayPlayer } from "../context/DemoReplayPlayerContext.tsx";
-import type { DemoFrame, DemoReplayData, DemoRound } from "../types.ts";
+import type { DemoFrame, DemoReplayData, DemoRound, PlayerFrame } from "../types.ts";
 import type { DrawFrameOptions } from "../canvas/draw-frame.ts";
 import type { DemoReplayPlayerConfig } from "../replay/player-config.ts";
 import type { ReplayLayerPreset, ReplayViewPreset } from "../replay/view-presets.ts";
-import type { CreateReplayLayersOptions } from "../canvas/layers/index.ts";
+import type { CreateReplayLayersOptions } from "../canvas/layers/index.tsx";
 import type { DemoReplayInput } from "../replay/normalize-demo.ts";
 import { usePlayback, type UsePlaybackOptions } from "./usePlayback.ts";
 import { useReplayView, type UseReplayViewOptions } from "./useReplayView.ts";
 import { useRoundNavigation } from "./useRoundNavigation.ts";
+import { getInterpolatedFrame } from "../utils/interpolate-frame.ts";
 
 export interface UseDemoReplayOptions
   extends Pick<UsePlaybackOptions, "initialFrameIndex" | "frameIndex" | "onFrameIndexChange"> {
-  /** From `createDemoReplayPlayer()` — auto-read from provider when omitted. */
   playerConfig?: DemoReplayPlayerConfig;
   viewPreset?: ReplayViewPreset;
   view?: UseReplayViewOptions;
@@ -22,6 +22,7 @@ export interface UseDemoReplayOptions
 
 export interface UseDemoReplayResult {
   frameIndex: number;
+  playbackTick: number;
   playing: boolean;
   setFrameIndex: (index: number) => void;
   play: () => void;
@@ -31,9 +32,12 @@ export interface UseDemoReplayResult {
   stepBackward: () => void;
   maxFrameIndex: number;
   currentFrame: DemoFrame | undefined;
+  /** Lerped frame while playing; exact frame when paused. */
+  displayFrame: DemoFrame | undefined;
   currentTick: number | undefined;
   demoRounds: DemoRound[];
   currentRound: DemoRound | undefined;
+  currentPhaseRound: DemoRound | undefined;
   goToRound: (roundNumber: number) => void;
   goToNextRound: () => void;
   goToPreviousRound: () => void;
@@ -64,6 +68,9 @@ export interface UseDemoReplayResult {
   showFlashOverlay: boolean;
   setShowFlashOverlay: (value: boolean) => void;
   toggleFlashOverlay: () => void;
+  selectedSteamId: string | null;
+  setSelectedSteamId: (steamId: string | null) => void;
+  selectPlayer: (player: PlayerFrame | null) => void;
 }
 
 export function useDemoReplay(
@@ -103,11 +110,28 @@ export function useDemoReplay(
 
   const maxFrameIndex = Math.max(0, (demo?.frames.length ?? 1) - 1);
   const currentFrame = demo?.frames[playback.frameIndex];
-  const currentTick = currentFrame?.tick;
+  const displayFrame = useMemo(() => {
+    if (!demo) return undefined;
+    if (playback.playing) {
+      return getInterpolatedFrame(demo, playback.playbackTick);
+    }
+    return currentFrame;
+  }, [demo, playback.playing, playback.playbackTick, currentFrame]);
+
+  const currentTick = playback.playing
+    ? Math.round(playback.playbackTick)
+    : currentFrame?.tick;
+
+  const [selectedSteamId, setSelectedSteamId] = useState<string | null>(null);
+
+  const selectPlayer = useCallback((player: PlayerFrame | null) => {
+    setSelectedSteamId(player?.steamId ?? null);
+  }, []);
 
   return useMemo(
     () => ({
       frameIndex: playback.frameIndex,
+      playbackTick: playback.playbackTick,
       playing: playback.playing,
       setFrameIndex: playback.setFrameIndex,
       play: playback.play,
@@ -117,9 +141,11 @@ export function useDemoReplay(
       stepBackward: playback.stepBackward,
       maxFrameIndex,
       currentFrame,
+      displayFrame,
       currentTick,
       demoRounds: roundNav.rounds,
       currentRound: roundNav.currentRound,
+      currentPhaseRound: roundNav.currentPhaseRound,
       goToRound: roundNav.goToRound,
       goToNextRound: roundNav.goToNextRound,
       goToPreviousRound: roundNav.goToPreviousRound,
@@ -150,11 +176,15 @@ export function useDemoReplay(
       showFlashOverlay: view.showFlashOverlay,
       setShowFlashOverlay: view.setShowFlashOverlay,
       toggleFlashOverlay: view.toggleFlashOverlay,
+      selectedSteamId,
+      setSelectedSteamId,
+      selectPlayer,
     }),
     [
       playback,
       maxFrameIndex,
       currentFrame,
+      displayFrame,
       currentTick,
       roundNav,
       playerConfig,
@@ -162,6 +192,8 @@ export function useDemoReplay(
       drawOptions,
       layerPreset,
       options.layerOptions,
+      selectedSteamId,
+      selectPlayer,
     ],
   );
 }
