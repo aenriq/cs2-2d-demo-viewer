@@ -176,7 +176,8 @@ function ManualCompose({ demo }: { demo: DemoReplayData }) {
         playing={replay.playing}
         onTogglePlay={replay.togglePlay}
         frameIndex={replay.frameIndex}
-        maxFrameIndex={replay.maxFrameIndex}
+        minFrameIndex={replay.scrubMinFrameIndex}
+        maxFrameIndex={replay.scrubMaxFrameIndex}
         onFrameIndexChange={replay.setFrameIndex}
       />
 
@@ -194,13 +195,14 @@ function ManualCompose({ demo }: { demo: DemoReplayData }) {
           demo={demo}
           currentRoundNumber={replay.currentRound?.number}
           onRoundSelect={(round) => replay.goToRound(round.number)}
-          renderRoundButton={({ round, active, onSelect }) => (
+          renderRoundButton={({ round, active, onSelect, borderColor, backgroundColor }) => (
             <button
               type="button"
               className={`app__round-btn${active ? " is-active" : ""}`}
+              style={{ borderColor, backgroundColor }}
               onClick={onSelect}
             >
-              R{round.number}
+              {round.number}
             </button>
           )}
         />

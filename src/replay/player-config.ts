@@ -34,6 +34,8 @@ export interface CreateDemoReplayPlayerOptions {
   /** Auto-fill missing optional arrays in demo JSON. Default true. */
   normalize?: boolean;
   canvasSize?: number;
+  /** Limit seekbar + playback to the active round. Default true. */
+  roundScopedScrubber?: boolean;
 }
 
 export interface DemoReplayPlayerConfig {
@@ -44,6 +46,7 @@ export interface DemoReplayPlayerConfig {
   defaultDrawOptions: DrawFrameOptions;
   normalize: boolean;
   canvasSize: number;
+  roundScopedScrubber: boolean;
   applyCapabilities: (options: DrawFrameOptions) => DrawFrameOptions;
 }
 
@@ -125,6 +128,7 @@ export function resolvePlayerConfig(
     defaultDrawOptions,
     normalize: options.normalize ?? true,
     canvasSize: options.canvasSize ?? 512,
+    roundScopedScrubber: options.roundScopedScrubber ?? true,
     applyCapabilities: (drawOptions) =>
       applyPlayerCapabilities(drawOptions, capabilities),
   };

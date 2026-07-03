@@ -35,9 +35,10 @@ export interface KillfeedEntry {
 export interface GetKillfeedEntriesOptions {
   /**
    * Maximum number of kills shown at once. Oldest visible kill drops off when
-   * a newer one arrives.
+   * a newer one arrives. Omit for no limit.
    *
-   * @defaultValue `5` (matches in-game killfeed size)
+   * @defaultValue `5` in {@link getKillfeedEntriesForDemo}; no limit in
+   * {@link useKillfeed} when `scopeToRound` is true.
    */
   maxEntries?: number;
   /**
@@ -48,6 +49,11 @@ export interface GetKillfeedEntriesOptions {
    * from `demo.tickRate` (e.g. `320` at 64 tick, `640` at 128 tick).
    */
   displayDurationTicks?: number;
+  /**
+   * Only include kills at or after this tick — use the current round's
+   * `startTick` so the feed clears when entering a new round.
+   */
+  minEventTick?: number;
 }
 
 const DEFAULT_MAX_ENTRIES = 5;
@@ -82,7 +88,13 @@ export function getKillfeedDisplayDurationTicks(demo: DemoReplayLike): number {
  * 1. Kill must have already happened (`event.tick <= currentTick`).
  * 2. Kill must still be within the display window
  *    (`currentTick - event.tick <= displayDurationTicks`).
- * 3. Results are **newest first**, capped at `maxEntries`.
+ * 3. When `minEventTick` is set, kill must be in the current segment
+ *    (`event.tick >= minEventTick`).
+ * 4. Results are **newest first**, capped at `maxEntries`.
+ *
+ * With round scoping ({@link useKillfeed} `scopeToRound`), pass a
+ * `displayDurationTicks` of `currentTick - minEventTick` so kills linger
+ * for the whole round instead of ~5 seconds.
  *
  * Scrubbing backward removes kills that have not happened yet; scrubbing
  * forward reveals them as their tick is reached.
@@ -107,20 +119,22 @@ export function getKillfeedEntries(
 ): KillfeedEntry[] {
   if (currentTick === undefined) return [];
 
-  const maxEntries = options.maxEntries ?? DEFAULT_MAX_ENTRIES;
+  const maxEntries = options.maxEntries;
   const displayDurationTicks = options.displayDurationTicks ?? 64 * DEFAULT_DISPLAY_SECONDS;
+  const minEventTick = options.minEventTick;
 
   const visible: KillfeedEntry[] = [];
 
   for (let i = kills.length - 1; i >= 0; i--) {
     const event = kills[i]!;
+    if (minEventTick !== undefined && event.tick < minEventTick) continue;
     if (event.tick > currentTick) continue;
 
     const ageTicks = currentTick - event.tick;
     if (ageTicks > displayDurationTicks) continue;
 
     visible.push({ event, ageTicks });
-    if (visible.length >= maxEntries) break;
+    if (maxEntries !== undefined && visible.length >= maxEntries) break;
   }
 
   return visible;
@@ -151,6 +165,7 @@ export function getKillfeedEntriesForDemo(
 
   return getKillfeedEntries(kills, currentTick, {
     ...options,
+    maxEntries: options.maxEntries ?? DEFAULT_MAX_ENTRIES,
     displayDurationTicks,
   });
 }

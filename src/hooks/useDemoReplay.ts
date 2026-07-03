@@ -10,10 +10,16 @@ import { usePlayback, type UsePlaybackOptions } from "./usePlayback.ts";
 import { useReplayView, type UseReplayViewOptions } from "./useReplayView.ts";
 import { useRoundNavigation } from "./useRoundNavigation.ts";
 import { getInterpolatedFrame } from "../utils/interpolate-frame.ts";
+import type { RoundFrameBounds } from "../utils/demo-rounds.ts";
 
 export interface UseDemoReplayOptions
-  extends Pick<UsePlaybackOptions, "initialFrameIndex" | "frameIndex" | "onFrameIndexChange"> {
+  extends Pick<
+    UsePlaybackOptions,
+    "initialFrameIndex" | "frameIndex" | "onFrameIndexChange"
+  > {
   playerConfig?: DemoReplayPlayerConfig;
+  /** Override factory config — limit seekbar to active round. */
+  roundScopedScrubber?: boolean;
   viewPreset?: ReplayViewPreset;
   view?: UseReplayViewOptions;
   layerPreset?: ReplayLayerPreset;
@@ -31,6 +37,11 @@ export interface UseDemoReplayResult {
   stepForward: () => void;
   stepBackward: () => void;
   maxFrameIndex: number;
+  /** Seekbar range — full demo or active round when round-scoped. */
+  scrubMinFrameIndex: number;
+  scrubMaxFrameIndex: number;
+  roundScopedScrubber: boolean;
+  roundFrameBounds: RoundFrameBounds | null;
   currentFrame: DemoFrame | undefined;
   /** Lerped frame while playing; exact frame when paused. */
   displayFrame: DemoFrame | undefined;
@@ -86,13 +97,18 @@ export function useDemoReplay(
     playerConfig?.layerPreset ??
     "full";
 
+  const roundScopedScrubber =
+    options.roundScopedScrubber ?? playerConfig?.roundScopedScrubber ?? false;
+
   const playback = usePlayback(demo, {
     initialFrameIndex: options.initialFrameIndex,
     frameIndex: options.frameIndex,
     onFrameIndexChange: options.onFrameIndexChange,
+    roundScopedScrubber,
   });
 
   const roundNav = useRoundNavigation({ demo, playback });
+
   const view = useReplayView({
     preset: options.viewPreset,
     initial: playerConfig?.defaultDrawOptions,
@@ -108,7 +124,12 @@ export function useDemoReplay(
     [playerConfig, view.drawOptions],
   );
 
-  const maxFrameIndex = Math.max(0, (demo?.frames.length ?? 1) - 1);
+  const demoMaxFrameIndex = Math.max(0, (demo?.frames.length ?? 1) - 1);
+  const roundFrameBounds = playback.roundFrameBounds;
+  const scrubMinFrameIndex = roundFrameBounds?.startFrameIndex ?? 0;
+  const scrubMaxFrameIndex =
+    roundFrameBounds?.endFrameIndex ?? demoMaxFrameIndex;
+
   const currentFrame = demo?.frames[playback.frameIndex];
   const displayFrame = useMemo(() => {
     if (!demo) return undefined;
@@ -139,7 +160,11 @@ export function useDemoReplay(
       togglePlay: playback.togglePlay,
       stepForward: playback.stepForward,
       stepBackward: playback.stepBackward,
-      maxFrameIndex,
+      maxFrameIndex: demoMaxFrameIndex,
+      scrubMinFrameIndex,
+      scrubMaxFrameIndex,
+      roundScopedScrubber,
+      roundFrameBounds,
       currentFrame,
       displayFrame,
       currentTick,
@@ -182,7 +207,11 @@ export function useDemoReplay(
     }),
     [
       playback,
-      maxFrameIndex,
+      demoMaxFrameIndex,
+      scrubMinFrameIndex,
+      scrubMaxFrameIndex,
+      roundScopedScrubber,
+      roundFrameBounds,
       currentFrame,
       displayFrame,
       currentTick,

@@ -7,6 +7,7 @@ import {
   type GetKillfeedEntriesOptions,
   type KillfeedEntry,
 } from "../utils/killfeed.ts";
+import { getRoundAtTick } from "../utils/rounds.ts";
 
 /**
  * Options for {@link useKillfeed}.
@@ -15,6 +16,11 @@ import {
  * with replay playback. `currentTick` wins when both are set.
  */
 export interface UseKillfeedOptions extends GetKillfeedEntriesOptions {
+  /**
+   * When true (default), only show kills from the current round/phase and keep
+   * each kill visible for the rest of that round (not the default ~5s window).
+   */
+  scopeToRound?: boolean;
   /**
    * Current replay tick — typically `useDemoReplay(demo).currentTick`.
    *
@@ -110,7 +116,7 @@ export function useKillfeed(
   demo: DemoReplayLike | null,
   options: UseKillfeedOptions = {},
 ): UseKillfeedResult {
-  const { currentTick: tickOption, frameIndex, maxEntries, displayDurationTicks } = options;
+  const { currentTick: tickOption, frameIndex, maxEntries, displayDurationTicks, minEventTick, scopeToRound = true } = options;
 
   const kills = useMemo(
     () => (demo?.events ?? []).filter(isKillEvent),
@@ -128,18 +134,48 @@ export function useKillfeed(
     [demo, displayDurationTicks],
   );
 
+  const resolvedMinEventTick = useMemo(() => {
+    if (minEventTick !== undefined) return minEventTick;
+    if (!scopeToRound || !demo || currentTick === undefined) return undefined;
+    return getRoundAtTick(demo, currentTick)?.startTick;
+  }, [minEventTick, scopeToRound, demo, currentTick]);
+
+  const effectiveDisplayDurationTicks = useMemo(() => {
+    if (displayDurationTicks !== undefined) return displayDurationTicks;
+    if (
+      scopeToRound &&
+      resolvedMinEventTick !== undefined &&
+      currentTick !== undefined
+    ) {
+      return Math.max(1, currentTick - resolvedMinEventTick + 1);
+    }
+    return resolvedDisplayDurationTicks;
+  }, [
+    displayDurationTicks,
+    scopeToRound,
+    resolvedMinEventTick,
+    currentTick,
+    resolvedDisplayDurationTicks,
+  ]);
+
+  const effectiveMaxEntries = useMemo(() => {
+    if (maxEntries !== undefined) return maxEntries;
+    return scopeToRound ? undefined : 5;
+  }, [maxEntries, scopeToRound]);
+
   const entries = useMemo(
     () =>
       getKillfeedEntries(kills, currentTick, {
-        maxEntries,
-        displayDurationTicks: resolvedDisplayDurationTicks,
+        maxEntries: effectiveMaxEntries,
+        displayDurationTicks: effectiveDisplayDurationTicks,
+        minEventTick: resolvedMinEventTick,
       }),
-    [kills, currentTick, maxEntries, resolvedDisplayDurationTicks],
+    [kills, currentTick, effectiveMaxEntries, effectiveDisplayDurationTicks, resolvedMinEventTick],
   );
 
   return {
     entries,
     currentTick,
-    displayDurationTicks: resolvedDisplayDurationTicks,
+    displayDurationTicks: effectiveDisplayDurationTicks,
   };
 }

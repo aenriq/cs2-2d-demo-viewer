@@ -195,3 +195,48 @@ export function getRoundIndex(
   if (roundNumber === undefined) return -1;
   return getPlayableRounds(demo).findIndex((round) => round.number === roundNumber);
 }
+
+export function getNextPlayableRound(
+  demo: DemoReplayLike,
+  roundNumber: number | undefined,
+): DemoRound | undefined {
+  const playable = getPlayableRounds(demo);
+  if (roundNumber === undefined) return playable[0];
+  const index = playable.findIndex((round) => round.number === roundNumber);
+  if (index < 0 || index >= playable.length - 1) return undefined;
+  return playable[index + 1];
+}
+
+export interface RoundFrameBounds {
+  startFrameIndex: number;
+  endFrameIndex: number;
+  startTick: number;
+  endTick: number;
+  roundNumber: number;
+}
+
+/** Frame index range covering a round's tick span (inclusive). */
+export function getRoundFrameBounds(
+  demo: DemoReplayLike,
+  round: DemoRound | undefined,
+): RoundFrameBounds | null {
+  if (!round || demo.frames.length === 0) return null;
+
+  const startFrameIndex = findFrameIndexForTick(demo, round.startTick);
+  let endFrameIndex = startFrameIndex;
+
+  for (let i = demo.frames.length - 1; i >= 0; i--) {
+    if (demo.frames[i]!.tick <= round.endTick) {
+      endFrameIndex = i;
+      break;
+    }
+  }
+
+  return {
+    startFrameIndex,
+    endFrameIndex: Math.max(startFrameIndex, endFrameIndex),
+    startTick: round.startTick,
+    endTick: round.endTick,
+    roundNumber: round.number,
+  };
+}

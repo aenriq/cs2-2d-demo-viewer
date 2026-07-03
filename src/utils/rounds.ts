@@ -10,6 +10,8 @@ export {
   getPlayableRounds,
   getRoundAtTick,
   getRoundForFrameIndex,
+  getNextPlayableRound,
+  getRoundFrameBounds,
   getRoundIndex,
   isKnifeWeapon,
   normalizeDemoRounds,

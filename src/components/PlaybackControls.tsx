@@ -7,6 +7,7 @@ export interface PlaybackControlsProps extends HTMLAttributes<HTMLDivElement> {
   onTogglePlay: () => void;
   frameIndex: number;
   maxFrameIndex: number;
+  minFrameIndex?: number;
   onFrameIndexChange: (index: number) => void;
   disabled?: boolean;
   playLabel?: string;
@@ -19,6 +20,7 @@ export function PlaybackControls({
   onTogglePlay,
   frameIndex,
   maxFrameIndex,
+  minFrameIndex = 0,
   onFrameIndexChange,
   disabled = false,
   playLabel,
@@ -37,6 +39,7 @@ export function PlaybackControls({
       />
       <FrameScrubber
         frameIndex={frameIndex}
+        min={minFrameIndex}
         maxFrameIndex={maxFrameIndex}
         onFrameIndexChange={onFrameIndexChange}
         disabled={disabled}

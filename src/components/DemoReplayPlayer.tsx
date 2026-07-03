@@ -50,6 +50,7 @@ export function DemoReplayPlayer({
   const replay = useDemoReplay(demo, {
     viewPreset,
     layerPreset: layerPreset ?? viewPreset,
+    roundScopedScrubber: false,
     ...replayOptions,
   });
 

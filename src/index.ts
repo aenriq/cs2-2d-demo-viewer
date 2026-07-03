@@ -4,7 +4,7 @@ export type { DemoRadarProps } from "./components/DemoRadar.tsx";
 export { DemoReplayPlayer } from "./components/DemoReplayPlayer.tsx";
 export type { DemoReplayPlayerProps } from "./components/DemoReplayPlayer.tsx";
 
-export { RoundSelector } from "./components/RoundSelector.tsx";
+export { RoundSelector, roundWinnerBorderColor } from "./components/RoundSelector.tsx";
 export type { RoundSelectorProps } from "./components/RoundSelector.tsx";
 
 export { PlaybackButton } from "./components/PlaybackButton.tsx";
@@ -44,8 +44,11 @@ export {
   buildDemoRoundsFromEvents,
   demoHasKnifeRound,
   getPlayableRounds,
+  getNextPlayableRound,
+  getRoundFrameBounds,
   normalizeDemoRounds,
 } from "./utils/demo-rounds.ts";
+export type { RoundFrameBounds } from "./utils/demo-rounds.ts";
 
 export {
   findFrameIndexForRound,
